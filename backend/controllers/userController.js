@@ -1,7 +1,7 @@
 import User from "../models/userModel.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import bcrypt from "bcryptjs";
-import createToken from '../utils/createToken.js';
+import createToken from "../utils/createToken.js";
 
 const createUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
@@ -37,4 +37,30 @@ const createUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { createUser };
+const loginUser = asyncHandler(async (req, res) => {
+  const {email, password} = req.body;
+
+  //--Checking for exisiting users in the db----
+  const existingUser = await User.findOne({ email });
+
+  //--After confirming the user exist
+  if (existingUser) {
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+    if (isPasswordValid) {
+      //--Create a token and set to headers as a cookie
+      createToken(res, existingUser._id);
+      res.status(201).json({
+        _id: existingUser._id,
+        username: existingUser.username,
+        email: existingUser.email,
+        isAdmin: existingUser.isAdmin,
+      });
+      return; //Exit the function after sending the response
+    }
+  }
+});
+
+export { createUser, loginUser };
