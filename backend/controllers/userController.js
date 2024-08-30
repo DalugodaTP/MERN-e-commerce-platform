@@ -38,7 +38,7 @@ const createUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
 
   //--Checking for exisiting users in the db----
   const existingUser = await User.findOne({ email });
@@ -64,13 +64,39 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutCurrentUser = asyncHandler(async (req, res) => {
-    res.cookie('jwt', '',{
-        httpOnly:true,
-        expires: new Date(0),
-    });
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
 
-    res.status(200).json({message:"Logout succesfully"});
-    
+  res.status(200).json({ message: "Logout succesfully" });
 });
 
-export { createUser, loginUser,logoutCurrentUser };
+const getAllUsers = asyncHandler(async (req, res) => {
+  //--Provide an empty object to get all users
+  const users = await User.find({});
+  res.json(users);
+});
+
+const updateCurrentUserProfile = asyncHandler(async (req, res) => {
+  //--Get the user
+  const user = await User.findById(req.user._id);
+  if (user) {
+    res.json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+    });
+  } else{
+    res.status(404)
+    throw new Error("User not found.")
+  }
+});
+
+export {
+  createUser,
+  loginUser,
+  logoutCurrentUser,
+  getAllUsers,
+  updateCurrentUserProfile,
+};
