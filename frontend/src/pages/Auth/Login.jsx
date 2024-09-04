@@ -35,7 +35,10 @@ const Login = () => {
             const res = await login({ email, password }).unwrap()
             console.log(res);
             dispatch(setCredentials({ ...res }));
+            //--Success Toast
+            toast.success("Logged in Successfully");
         } catch (error) {
+            //--Error Toast
             toast.error(error?.data?.message || error.message)
         }
     }
