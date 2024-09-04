@@ -38,14 +38,14 @@ const Register = () => {
         }
     }, [navigate, redirect, userInfo])
 
-    const submitHandler = async(e)=>{
+    const submitHandler = async (e) => {
         e.preventDefault();
         if (password !== confirmePassword) {
             toast.error("Passwords do not match")
-        } else{
+        } else {
             try {
-                const res= await register({username,email,password}).unwrap();
-                dispatch(setCredentials({...res}))
+                const res = await register({ username, email, password }).unwrap();
+                dispatch(setCredentials({ ...res }))
                 navigate(redirect);
                 toast.success("User registered Successfully");
             } catch (error) {
@@ -110,13 +110,20 @@ const Register = () => {
 
                 <div className="mt-4">
                     <p className="text-white">
-                        Already have an account? {""}
+                        Already have an account ? {""}
                         <Link to={redirect ? `/login?redirect=${redirect}` : "/login"}
-                        className="text-pink-500">
+                            className="text-pink-500">
                             Login
                         </Link>
                     </p>
                 </div>
+            </div>
+            <div className=" w-[48%] h-[95vh] rounded-lg">
+                <img
+                    src="https://images.unsplash.com/photo-1576502200916-3808e07386a5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2065&q=80"
+                    alt=""
+                    className=" h-[95vh] xl:block lg:hidden md:hidden sm:hidden rounded-lg"
+                />
             </div>
         </section>
     )
